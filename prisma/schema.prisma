@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum EstadoCita {
+  PROGRAMADA
+  COMPLETADA
+  CANCELADA
+}
+
+model Especialidad {
+  id          Int      @id @default(autoincrement())
+  nombre      String   @unique @db.VarChar(100)
+  descripcion String?  @db.VarChar(255)
+  creadoEn    DateTime @default(now()) @map("creado_en")
+  medicos Medico[]
+  @@map("especialidades")
+}
+
+model Medico {
+  id             Int      @id @default(autoincrement())
+  nombre         String   @db.VarChar(100)
+  apellido       String   @db.VarChar(100)
+  email          String   @unique @db.VarChar(150)
+  telefono       String?  @db.VarChar(20)
+  numColegiatura String   @unique @map("num_colegiatura") @db.VarChar(20)
+  activo         Boolean  @default(true)
+  creadoEn       DateTime @default(now()) @map("creado_en")
+
+  especialidadId Int          @map("especialidad_id")
+  especialidad   Especialidad @relation(fields: [especialidadId], references: [id], onDelete: Restrict)
+  citas Cita[]
+
+  //filtrando por especialidad
+  @@index([especialidadId])
+  @@map("medicos")
+}
+
+model Paciente {
+  id              Int      @id @default(autoincrement())
+  nombre          String   @db.VarChar(100)
+  apellido        String   @db.VarChar(100)
+  email           String   @unique @db.VarChar(150)
+  telefono        String   @db.VarChar(20)
+  fechaNacimiento DateTime @map("fecha_nacimiento") @db.Date
+  direccion       String?  @db.VarChar(255)
+  fechaRegistro   DateTime @default(now()) @map("fecha_registro")
+
+  citas Cita[]
+
+  @@map("pacientes")
+}
+
+model Cita {
+  id        Int        @id @default(autoincrement())
+  fechaHora DateTime   @map("fecha_hora")
+  motivo    String?    @db.VarChar(255)
+  estado    EstadoCita @default(PROGRAMADA)
+  notas     String?    @db.Text
+  creadoEn  DateTime   @default(now()) @map("creado_en")
+  editadoEn DateTime   @updatedAt @map("editado_en")
+
+  pacienteId Int      @map("paciente_id")
+  paciente   Paciente @relation(fields: [pacienteId], references: [id], onDelete: Cascade)
+
+  medicoId Int    @map("medico_id")
+  medico   Medico @relation(fields: [medicoId], references: [id], onDelete: Restrict)
+
+  // Agenda del médico por rango de fechas
+  @@index([medicoId, fechaHora])
+
+  // Expediente del paciente
+  @@index([pacienteId, fechaHora])
+
+  // Corte operativo diario
+  @@index([fechaHora, estado])
+
+  // Evita doble reserva del mismo médico en el mismo horario
+  @@unique([medicoId, fechaHora])
+  @@map("citas")
+}
+
+model Usuario {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique @db.VarChar(150)
+  passwordHash String   @map("password_hash")
+  creadoEn     DateTime @default(now()) @map("creado_en")
+
+  @@map("usuarios")
+}
