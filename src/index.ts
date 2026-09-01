@@ -1,6 +1,8 @@
 import "dotenv/config";
 import express from "express";
-import prisma from "../src/config/prisma";
+import { prisma } from "../src/config/prisma";
+import pacienteRoutes from "./routes/pacientesRoutes.js";
+import medicoRoutes from "./routes/medicosRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -26,9 +28,10 @@ app.get("/api/especialidades", async (_req, res) => {
   }
 });
 
+app.use("/api/pacientes", pacienteRoutes);
+app.use("/api/medicos", medicoRoutes);
+
 // ---------------------------------------------------------------------------
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });
-
-
