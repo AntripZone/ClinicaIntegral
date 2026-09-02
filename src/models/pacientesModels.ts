@@ -22,14 +22,6 @@ export const pacienteModel = {
   },
 
   getPacienteById: async (id: number) => {
-    return await prisma.paciente.findUnique({ where: { id } });
-  },
-
-  getPacienteByEmail: async (email: string) => {
-    return await prisma.paciente.findUnique({ where: { email } });
-  },
-
-  getPacienteConHistorial: async (id: number) => {
     return await prisma.paciente.findUnique({
       where: { id },
       include: {
@@ -37,16 +29,15 @@ export const pacienteModel = {
           orderBy: { fechaHora: "desc" },
           include: {
             medico: {
-              select: {
-                id: true,
-                nombre: true,
-                apellido: true,
-                especialidad: { select: { id: true, nombre: true } },
-              },
+              include: { especialidad: true },
             },
           },
         },
       },
     });
+  },
+
+  getPacienteByEmail: async (email: string) => {
+    return await prisma.paciente.findUnique({ where: { email } });
   },
 };

@@ -1,0 +1,436 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de gestion de Clinical Integral AlvaClinic",
+    "description": "Documentacion generada automaticamente por swagger-autogen",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor de desarrollo"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Registro e inicio de sesión"
+    },
+    {
+      "name": "Pacientes",
+      "description": "Módulo de Recepción"
+    },
+    {
+      "name": "Médicos",
+      "description": "Directorio de especialistas"
+    },
+    {
+      "name": "Especialidades",
+      "description": "Catálogo de áreas médicas"
+    }
+  ],
+  "paths": {
+    "/api/salud": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/especialidades": {
+      "get": {
+        "tags": [
+          "Especialidades"
+        ],
+        "summary": "Catálogo de especialidades con su número de médicos",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Token no proporcionado o inválido"
+          },
+          "403": {
+            "description": "El rol no tiene permiso"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Registra una cuenta de acceso",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Usuario creado"
+          },
+          "409": {
+            "description": "El correo ya está registrado"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password",
+                  "rol"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "recepcion@clinica.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "recepcion123"
+                  },
+                  "rol": {
+                    "type": "string",
+                    "enum": [
+                      "RECEPCIONISTA",
+                      "MEDICO",
+                      "GERENCIA"
+                    ],
+                    "example": "RECEPCIONISTA"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Inicia sesión y devuelve un token JWT",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Token emitido"
+          },
+          "401": {
+            "description": "Credenciales inválidas"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "recepcion@clinica.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "recepcion123"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Devuelve el usuario del token actual",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/pacientes/": {
+      "post": {
+        "tags": [
+          "Pacientes"
+        ],
+        "summary": "Registra un paciente nuevo",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Paciente creado"
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "401": {
+            "description": "Token no proporcionado o inválido"
+          },
+          "403": {
+            "description": "El rol no tiene permiso"
+          },
+          "409": {
+            "description": "El correo ya está registrado"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "nombre",
+                  "apellido",
+                  "email",
+                  "telefono",
+                  "fechaNacimiento"
+                ],
+                "properties": {
+                  "nombre": {
+                    "type": "string",
+                    "example": "Valeria"
+                  },
+                  "apellido": {
+                    "type": "string",
+                    "example": "Ccahuana"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "valeria@example.com"
+                  },
+                  "telefono": {
+                    "type": "string",
+                    "example": "976543210"
+                  },
+                  "fechaNacimiento": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "1988-02-29"
+                  },
+                  "direccion": {
+                    "type": "string",
+                    "example": "Av. Larco 1450, Trujillo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Pacientes"
+        ],
+        "summary": "Lista todos los pacientes",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Token no proporcionado o inválido"
+          },
+          "403": {
+            "description": "El rol no tiene permiso"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/pacientes/{id}": {
+      "get": {
+        "tags": [
+          "Pacientes"
+        ],
+        "summary": "Expediente completo: datos personales + historial de citas",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Id del paciente"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Paciente no encontrado"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/medicos/": {
+      "get": {
+        "tags": [
+          "Médicos"
+        ],
+        "summary": "Lista médicos, opcionalmente filtrados por especialidad",
+        "description": "",
+        "parameters": [
+          {
+            "name": "especialidad",
+            "in": "query",
+            "description": "Nombre de la especialidad (no distingue mayúsculas)",
+            "required": false,
+            "example": "Pediatría",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Token no proporcionado o inválido"
+          },
+          "403": {
+            "description": "El rol no tiene permiso"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/medicos/{id}": {
+      "get": {
+        "tags": [
+          "Médicos"
+        ],
+        "summary": "Un médico por id, con su especialidad",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Id del médico"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Médico no encontrado"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Token JWT obtenido en POST /api/auth/login"
+      }
+    }
+  }
+}

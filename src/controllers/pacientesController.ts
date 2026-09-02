@@ -5,6 +5,36 @@ import type { PacienteInput } from "../middlewares/validarPaciente";
 export const pacienteController = {
   create: async (req: Request, res: Response) => {
     try {
+      /*
+      #swagger.tags = ['Pacientes']
+      #swagger.summary = 'Registra un paciente nuevo'
+      #swagger.security = [{ "bearerAuth": [] }]
+      #swagger.autoHeaders = false
+      #swagger.requestBody = {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              required: ["nombre", "apellido", "email", "telefono", "fechaNacimiento"],
+              properties: {
+                nombre: { type: "string", example: "Valeria" },
+                apellido: { type: "string", example: "Ccahuana" },
+                email: { type: "string", example: "valeria@example.com" },
+                telefono: { type: "string", example: "976543210" },
+                fechaNacimiento: { type: "string", format: "date", example: "1988-02-29" },
+                direccion: { type: "string", example: "Av. Larco 1450, Trujillo" }
+              }
+            }
+          }
+        }
+      }
+      #swagger.responses[201] = { description: 'Paciente creado' }
+      #swagger.responses[400] = { description: 'Datos inválidos' }
+      #swagger.responses[401] = { description: 'Token no proporcionado o inválido' }
+      #swagger.responses[403] = { description: 'El rol no tiene permiso' }
+      #swagger.responses[409] = { description: 'El correo ya está registrado' }
+    */
       const data = req.body as PacienteInput;
       const existente = await pacienteModel.getPacienteByEmail(data.email);
       if (existente) {
@@ -23,6 +53,14 @@ export const pacienteController = {
 
   getAll: async (_req: Request, res: Response) => {
     try {
+      /*
+    #swagger.tags = ['Pacientes']
+    #swagger.summary = 'Lista todos los pacientes'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.autoHeaders = false
+    #swagger.responses[401] = { description: 'Token no proporcionado o inválido' }
+    #swagger.responses[403] = { description: 'El rol no tiene permiso' }
+  */
       const pacientes = await pacienteModel.getAllPacientes();
       return res.json(pacientes);
     } catch (error) {
@@ -33,6 +71,14 @@ export const pacienteController = {
 
   getById: async (req: Request, res: Response) => {
     try {
+      /*
+    #swagger.tags = ['Pacientes']
+    #swagger.summary = 'Expediente completo: datos personales + historial de citas'
+    #swagger.security = [{ "bearerAuth": [] }]
+    #swagger.autoHeaders = false
+    #swagger.parameters['id'] = { in: 'path', description: 'Id del paciente', required: true, type: 'integer' }
+    #swagger.responses[404] = { description: 'Paciente no encontrado' }
+  */
       const id = Number(req.params.id);
 
       if (!Number.isInteger(id) || id <= 0) {
