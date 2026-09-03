@@ -13,6 +13,7 @@ const doc = {
     { name: "Auth", description: "Registro e inicio de sesión" },
     { name: "Pacientes", description: "Módulo de Recepción" },
     { name: "Médicos", description: "Directorio de especialistas" },
+    { name: "Citas", description: "Módulo de Consultorio" },
     { name: "Especialidades", description: "Catálogo de áreas médicas" },
   ],
   components: {

@@ -51,7 +51,7 @@ export const pacienteController = {
     }
   },
 
-  getAll: async (_req: Request, res: Response) => {
+  getAll: async (req: Request, res: Response) => {
     try {
       /*
     #swagger.tags = ['Pacientes']

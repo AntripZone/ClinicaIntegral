@@ -25,21 +25,15 @@
       "description": "Directorio de especialistas"
     },
     {
+      "name": "Citas",
+      "description": "Módulo de Consultorio"
+    },
+    {
       "name": "Especialidades",
       "description": "Catálogo de áreas médicas"
     }
   ],
   "paths": {
-    "/api/salud": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/especialidades": {
       "get": {
         "tags": [
@@ -420,6 +414,190 @@
             "bearerAuth": []
           }
         ]
+      }
+    },
+    "/api/citas/": {
+      "post": {
+        "tags": [
+          "Citas"
+        ],
+        "summary": "Agenda una cita",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Cita agendada en estado PROGRAMADA"
+          },
+          "400": {
+            "description": "Datos inválidos o fecha en el pasado"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "El paciente o el médico no existe"
+          },
+          "409": {
+            "description": "El médico ya tiene una cita a esa hora"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "pacienteId",
+                  "medicoId",
+                  "fechaHora"
+                ],
+                "properties": {
+                  "pacienteId": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "medicoId": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "fechaHora": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2026-09-15T10:00:00.000Z"
+                  },
+                  "motivo": {
+                    "type": "string",
+                    "example": "Control de presión arterial"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/citas/{id}": {
+      "get": {
+        "tags": [
+          "Citas"
+        ],
+        "summary": "Una cita por id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Id de la cita"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Cita no encontrada"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/citas/{id}/estado": {
+      "patch": {
+        "tags": [
+          "Citas"
+        ],
+        "summary": "Actualiza el estado de una cita",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Id de la cita"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Estado actualizado"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Cita no encontrada"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "estado"
+                ],
+                "properties": {
+                  "estado": {
+                    "type": "string",
+                    "enum": [
+                      "COMPLETADA",
+                      "CANCELADA"
+                    ],
+                    "example": "COMPLETADA"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   },

@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import { prisma } from "../src/config/prisma";
 import pacienteRoutes from "./routes/pacientesRoutes.js";
 import medicoRoutes from "./routes/medicosRoutes.js";
+import citaRoutes from "./routes/citasRoutes";
 import { verificarToken } from "./middlewares/authMiddleware";
 import { autorizar } from "./middlewares/authRolMiddleware";
 import authRoutes from "./routes/authRoutes.js";
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get("/api/salud", (_req, res) => {
+  //#swagger.ignore = true
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
@@ -54,6 +56,7 @@ app.get(
 app.use("/api/auth", authRoutes);
 app.use("/api/pacientes", pacienteRoutes);
 app.use("/api/medicos", medicoRoutes);
+app.use("/api/citas", citaRoutes);
 
 // ---------------------------------------------------------------------------
 app.listen(PORT, () => {
