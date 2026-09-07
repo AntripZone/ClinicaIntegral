@@ -38,7 +38,7 @@ export const especialidadesController = {
         });
       }
 
-      const especialidad = await especialidadModel.create(data.nombre);
+      const especialidad = await especialidadModel.create(data);
       return res.status(201).json(especialidad);
     } catch (error) {
       console.error("POST /api/especialidades:", error);

@@ -1,4 +1,5 @@
 import { prisma } from "../config/prisma.js";
+import type { EspecialidadInput } from "../middlewares/validarEspecialidad.js";
 
 export const especialidadModel = {
   findAll: async () => {
@@ -17,9 +18,9 @@ export const especialidadModel = {
     });
   },
 
-  create: async (nombre: string, descripcion?: string) => {
+  create: async (data: EspecialidadInput) => {
     return await prisma.especialidad.create({
-      data: { nombre, descripcion: descripcion ?? null },
+      data: { nombre: data.nombre, descripcion: data.descripcion ?? null },
     });
   },
 
