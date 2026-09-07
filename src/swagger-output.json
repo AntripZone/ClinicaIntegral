@@ -60,6 +60,61 @@
             "bearerAuth": []
           }
         ]
+      },
+      "post": {
+        "tags": [
+          "Especialidades"
+        ],
+        "summary": "Registra una especialidad nueva",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Especialidad creada"
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "401": {
+            "description": "Token no proporcionado o inválido"
+          },
+          "403": {
+            "description": "El rol no tiene permiso"
+          },
+          "409": {
+            "description": "Ya existe una especialidad con ese nombre"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "nombre"
+                ],
+                "properties": {
+                  "nombre": {
+                    "type": "string",
+                    "example": "Neurología"
+                  },
+                  "descripcion": {
+                    "type": "string",
+                    "example": "Enfermedades del sistema nervioso"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/auth/register": {
@@ -598,6 +653,49 @@
             }
           }
         }
+      }
+    },
+    "/api/citas/reportes/corte-diario": {
+      "get": {
+        "tags": [
+          "Citas"
+        ],
+        "summary": "Corte operativo diario: citas completadas y canceladas en una fecha",
+        "description": "",
+        "parameters": [
+          {
+            "name": "fecha",
+            "in": "query",
+            "description": "Fecha en formato YYYY-MM-DD",
+            "required": true,
+            "example": "2026-09-06",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resumen del día"
+          },
+          "400": {
+            "description": "Fecha ausente o inválida"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "El rol no tiene permiso"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   },

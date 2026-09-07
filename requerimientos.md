@@ -11,7 +11,7 @@
 | direccion        | Texto         |             |
 | fecha_registro   | Fecha         | Obligatorio |
 
-## Entity: especialidaddes
+## Entity: especialidades
 
 | Atributo         | Tipo          | Notas       |
 | ---------------- | ------------- | ----------- |

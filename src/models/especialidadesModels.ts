@@ -22,4 +22,10 @@ export const especialidadModel = {
       data: { nombre, descripcion: descripcion ?? null },
     });
   },
+
+  findByNombre: async (nombre: string) => {
+    return await prisma.especialidad.findFirst({
+      where: { nombre: { equals: nombre, mode: "insensitive" } },
+    });
+  },
 };

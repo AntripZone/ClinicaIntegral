@@ -4,7 +4,6 @@ import { citaModel } from "../models/citasModels.js";
 import { Prisma } from "../generated/prisma/client";
 import { pacienteModel } from "../models/pacientesModels.js";
 import { medicoModel } from "../models/medicosModels.js";
-import { error } from "node:console";
 
 export const citaController = {
   create: async (req: Request, res: Response) => {
@@ -129,6 +128,40 @@ export const citaController = {
       return res
         .status(500)
         .json({ error: "Error al actualizar el estado de la cita" });
+    }
+  },
+
+  corteDiario: async (req: Request, res: Response) => {
+    /*
+      #swagger.tags = ['Citas']
+      #swagger.summary = 'Corte operativo diario: citas completadas y canceladas en una fecha'
+      #swagger.security = [{ "bearerAuth": [] }]
+      #swagger.parameters['fecha'] = { in: 'query', description: 'Fecha en formato YYYY-MM-DD', required: true, type: 'string', example: '2026-09-06' }
+      #swagger.responses[200] = { description: 'Resumen del día' }
+      #swagger.responses[400] = { description: 'Fecha ausente o inválida' }
+      #swagger.responses[403] = { description: 'El rol no tiene permiso' }
+    */
+    try {
+      const raw = req.query.fecha;
+
+      if (typeof raw !== "string" || raw.trim() === "") {
+        return res
+          .status(400)
+          .json({ error: "El parámetro 'fecha' es obligatorio (YYYY-MM-DD)" });
+      }
+
+      const fecha = new Date(raw);
+      if (Number.isNaN(fecha.getTime())) {
+        return res
+          .status(400)
+          .json({ error: "La fecha no es válida. Usa el formato YYYY-MM-DD" });
+      }
+
+      const resumen = await citaModel.resumenDelDia(fecha);
+      return res.json(resumen);
+    } catch (error) {
+      console.error("GET /api/citas/reportes/corte-diario:", error);
+      return res.status(500).json({ error: "Error al generar el reporte" });
     }
   },
 };

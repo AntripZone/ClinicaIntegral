@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { citaController } from "../controllers/citasController.js";
-import { validarCita, validarCitaEstado } from "../middlewares/validarCita.js";
+import { validarCita, validarEstadoCita } from "../middlewares/validarCita.js";
 import { verificarToken } from "../middlewares/authMiddleware.js";
 import { autorizar } from "../middlewares/authRolMiddleware.js";
 
@@ -23,8 +23,14 @@ router.patch(
   "/:id/estado",
   verificarToken,
   autorizar("MEDICO"),
-  validarCitaEstado,
+  validarEstadoCita,
   citaController.updateEstado,
+);
+router.get(
+  "/reportes/corte-diario",
+  verificarToken,
+  autorizar("GERENCIA"),
+  citaController.corteDiario,
 );
 
 export default router;

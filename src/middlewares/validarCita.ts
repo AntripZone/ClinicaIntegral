@@ -19,7 +19,26 @@ export const citaEstadoSchema = z.object({
 export type CitaInput = z.infer<typeof citaSchema>;
 export type CitaEstadoInput = z.infer<typeof citaEstadoSchema>;
 
-export const validarCita = (
+const validarCitas =
+  (schema: typeof citaSchema | typeof citaEstadoSchema) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    const resultado = schema.safeParse(req.body);
+    if (!resultado.success)
+      return res.status(404).json({
+        error: "Datos invalidos",
+        detalles: resultado.error.issues.map((i) => ({
+          campo: i.path.join("."),
+          mensaje: i.message,
+        })),
+      });
+
+    req.body = resultado.data;
+    return next();
+  };
+export const validarCita = validarCitas(citaSchema);
+export const validarEstadoCita = validarCitas(citaEstadoSchema);
+
+/*export const validarCita = (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -56,4 +75,4 @@ export const validarCitaEstado = (
 
   req.body = resultado.data;
   return next();
-};
+};*/
